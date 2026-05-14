@@ -20,6 +20,7 @@ class GenerateImage extends Controller
     {
         $payloads = $request->payload;
 
+      
 
         try {
              $request->validate([
@@ -27,7 +28,7 @@ class GenerateImage extends Controller
          //   'payload.*.product' => ['required', new ProductExists],
         ]);
         } catch (\Throwable $th) {
-
+              
                 return response()->json([
                         'status'  => 'error',
                         'message' => 'Produto(s) inválidos',
@@ -36,8 +37,6 @@ class GenerateImage extends Controller
         }
 
         $results  = [];
-
- 
         $requisicaoId = (string) \Illuminate\Support\Str::uuid();
         foreach ($payloads as $payload) {
             $product = $this->store($request, $payload, $requisicaoId);
@@ -45,8 +44,6 @@ class GenerateImage extends Controller
                 return $product;
             }
 
-
-	try{
             $imageResponse = Http::acceptJson()
                 ->post(TemplateService::GENERATE_IMAGE_URL, [
                     'template_id'     => $request->template_id,
@@ -74,16 +71,8 @@ class GenerateImage extends Controller
                         'Y'                   => $payload['Y'],
                     ],
                 ]);
-	} catch(\Throwable $th){
-
-	 return response()->json([
-                    'status'  => 'success',
-                    'teste' => $th->getMessage(),
-                ]);
-
-	}
-
-
+           
+           
 
             if ($imageResponse->failed()) {
                 return response()->json([

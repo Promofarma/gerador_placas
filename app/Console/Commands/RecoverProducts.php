@@ -100,7 +100,8 @@ class RecoverProducts extends Command
 
                     if ($responseData['status'] === 'success') {
                         $paths[] = [
-                            'path' =>  asset(' public/img/' . $responseData['pdf']),
+                            //path' =>  asset(' public/img/' . $responseData['pdf']),
+			    'path' =>  asset(env('APP_URL') . 'img/' . $responseData['pdf']),
                             'template_id' => $first->ID_TEMPLATE,
                             'type' => $first->TIPO_TEMPLATE
                         ];

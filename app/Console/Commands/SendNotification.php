@@ -7,16 +7,10 @@ use Illuminate\Support\Facades\Http;
 
 Class SendNotification {
 
-    public function Notification($dados)  {
-
-    $response = Http::post('http://notificacao.promofarma.int/api/v1/notifications',$dados);
-
-
-    return $response;
-
-        
+ public function Notification($dados) {
+        $response = Http::post('http://notificacao_http/api/v1/notifications', $dados);
+        return $response;
     }
-
 
 
 }
