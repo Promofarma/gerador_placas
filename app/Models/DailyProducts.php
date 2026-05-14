@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class DailyProducts extends Model
 
 {
-    protected $connection  = 'sqlsrv';
 
     protected $table = 'VW_ETIQUETAS_PLACAS_RESULTADOS';
 
