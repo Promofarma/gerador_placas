@@ -18,28 +18,27 @@ class DailyProducts extends Model
 
 
     public static function getDailyProducts($loja)
-    {
-
-        $logs = Logs::all();
-
-        $logs = json_decode(json_encode($logs), true);
-        $ids = collect($logs)
-        ->flatMap(fn($log) => preg_match('/[\["](?:IDS:|IDS"\s*:\s*")[^\d]*([\d,\s]+)/', $log['COMANDO_EXECUTADO'], $m) ? array_map('trim', explode(',', $m[1])) : [])
+{
+    $ids = Logs::all()
+        ->flatMap(function ($log) {
+            preg_match('/[\["](?:IDS:|IDS"\s*:\s*")[^\d]*([\d,\s]+)/', $log->COMANDO_EXECUTADO, $m);
+            return isset($m[1]) ? array_map('trim', explode(',', $m[1])) : [];
+        })
         ->filter()
         ->unique()
-        ->values();
+        ->values()
+        ->toArray();
 
-        $products = DailyProducts::query()
+    $query = DailyProducts::query()
         ->whereNotNull('ID_TEMPLATE')
         ->whereNotNull('LOJA')
-        ->whereNotin('ID', $ids)
-        ->where('loja', $loja)
-       
-       
-        ->get();
+        ->where('loja', $loja);
 
-
-        return $products;
+    foreach (array_chunk($ids, 2000) as $chunk) {
+        $query->whereNotIn('ID', $chunk);
     }
+
+    return $query->get();
+}
 
 }
